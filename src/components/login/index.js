@@ -20,6 +20,12 @@ class Login extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
+    this.setState({ loading: true });
+    if (this.state.register) {
+      console.log(this.state.formdata, "register");
+    } else {
+      console.log(this.state.formdata, "login");
+    }
     console.log(this.state.formdata);
   };
 
