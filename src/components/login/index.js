@@ -1,4 +1,8 @@
 import React, { Component } from "react";
+import { registerUser, loginUser } from "../store/actions";
+import { connect } from "react-redux";
+
+import { toast } from "react-toastify";
 
 class Login extends Component {
   state = {
@@ -22,11 +26,28 @@ class Login extends Component {
     e.preventDefault();
     this.setState({ loading: true });
     if (this.state.register) {
-      console.log(this.state.formdata, "register");
+      this.props
+        .dispatch(registerUser(this.state.formdata))
+        .then(({ payload }) => this.handleRedirection(payload));
+      // console.log(this.state.formdata, "register");
     } else {
-      console.log(this.state.formdata, "login");
+      this.props
+        .dispatch(loginUser(this.state.formdata))
+        .then(({ payload }) => this.handleRedirection(payload));
+      // console.log(this.state.formdata, "login");
     }
-    console.log(this.state.formdata);
+    console.log(this.state);
+  };
+
+  handleRedirection = (result) => {
+    if (result.error) {
+      this.setState({ loading: false });
+      toast.error(result.error, {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+    } else {
+      return this.props.history.push("/dashboard");
+    }
   };
 
   handleInputs = (e) => {
@@ -117,4 +138,9 @@ class Login extends Component {
     );
   }
 }
-export default Login;
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToProps)(Login);
