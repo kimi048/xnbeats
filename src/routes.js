@@ -9,10 +9,16 @@ import Login from "./components/login";
 import Contact from "./components/contact";
 
 import ToastsComponent from "./utils/toasts";
+import { connect } from "react-redux";
+import { autoSignIn } from "./components/store/actions";
 
 class Routes extends Component {
-  render() {
-    return (
+  componentDidMount() {
+    this.props.dispatch(autoSignIn());
+  }
+
+  app = (auth) => (
+    <>
       <BrowserRouter>
         <Header />
         <Switch>
@@ -23,7 +29,15 @@ class Routes extends Component {
         <Footer />
         <ToastsComponent />
       </BrowserRouter>
-    );
+    </>
+  );
+
+  render() {
+    const { auth } = this.props;
+    return auth.checkingAuth ? this.app(auth) : "...loading";
   }
 }
-export default Routes;
+
+const mapStateToProps = (state) => ({ auth: state.auth });
+
+export default connect(mapStateToProps)(Routes);
