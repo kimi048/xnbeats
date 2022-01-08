@@ -7,6 +7,10 @@ import Footer from "./components/footer";
 import Home from "./components/home";
 import Login from "./components/login";
 import Contact from "./components/contact";
+import Dashboard from "./components/dashboard";
+import AuthHoc from "./components/hoc/authHoc";
+import Reviews from "./components/dashboard/reviews";
+import Profile from "./components/dashboard/profile";
 
 import ToastsComponent from "./utils/toasts";
 import { connect } from "react-redux";
@@ -24,6 +28,9 @@ class Routes extends Component {
       <BrowserRouter>
         <Header auth={auth} logout={this.handleLogout} />
         <Switch>
+          <Route path="/dashboard/reviews" component={AuthHoc(Reviews, true)} />
+          <Route path="/dashboard/profile" component={AuthHoc(Profile)} />
+          <Route path="/dashboard" component={AuthHoc(Dashboard)} />
           <Route path="/login" component={Login} />
           <Route path="/contact" component={Contact} />
           <Route path="/" component={Home} />
