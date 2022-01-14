@@ -56,3 +56,24 @@ export const autoSignIn = () =>
   });
 
 export const logoutUser = () => firebase.auth().signOut();
+
+export const updateProfile = (formData, isEmailChanged) => {
+  // console.log(formData);
+  const collection = usersCollection.doc(formData.uid);
+  const updateDocment = () =>
+    collection
+      .update(formData)
+      .then(() =>
+        collection
+          .get()
+          .then((snapshot) => ({ isAuth: true, user: snapshot.data() }))
+      );
+
+  if (isEmailChanged) {
+    let getUser = firebase.auth().currentUser;
+    getUser.updateEmail(formData.email);
+    return updateDocment();
+  } else {
+    return updateDocment();
+  }
+};

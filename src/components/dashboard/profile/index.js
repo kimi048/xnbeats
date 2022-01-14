@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import DashLayout from "../../../utils/dash_layout";
 import { useForm } from "react-hook-form";
 import LoginModal from "../../../utils/login_modal";
+import { toast } from "react-toastify";
 
 import { useSelector, useDispatch } from "react-redux";
+import { updateProfile } from "../../store/actions";
 
 const Profile = (props) => {
   const auth = useSelector((state) => state.auth);
@@ -22,6 +24,14 @@ const Profile = (props) => {
     setDisabled(true);
     setShowModal({ open: false, formData: "" });
     //dispatch
+    // console.log({ uid: auth.user.uid, ...data });
+    dispatch(
+      updateProfile({ uid: auth.user.uid, ...data }, isEmailChanged)
+    ).then(() => {
+      toast.success("congrats your profile has been updated", {
+        position: toast.POSITION.BOTTOM_LEFT,
+      });
+    });
   };
 
   const handleClose = () => setShowModal({ open: false, formdata: "" });
