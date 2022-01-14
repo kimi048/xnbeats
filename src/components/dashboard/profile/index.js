@@ -14,11 +14,14 @@ const Profile = (props) => {
   const [showModal, setShowModal] = useState({ open: false, formData: "" });
 
   const handleReAuthModal = (data) => {
-    setShowModal({ open: true, formdata: data });
+    setShowModal({ open: true, formData: data });
   };
 
   const submitForm = (data) => {
-    console.log(data);
+    const isEmailChanged = auth.user.email === data.email ? false : true;
+    setDisabled(true);
+    setShowModal({ open: false, formData: "" });
+    //dispatch
   };
 
   const handleClose = () => setShowModal({ open: false, formdata: "" });
@@ -137,11 +140,16 @@ const Profile = (props) => {
         <button
           className="btn btn-outline-primary btn-lg btn-block"
           type="submit"
+          disabled={disabled}
         >
           Update profile
         </button>
       </form>
-      <LoginModal modalState={showModal} handleClose={handleClose} />
+      <LoginModal
+        modalState={showModal}
+        handleClose={handleClose}
+        submitForm={(data) => submitForm(data)}
+      />
     </DashLayout>
   );
 };

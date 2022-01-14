@@ -1,8 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import { useForm } from "react-hook-form";
+import firebase from "firebase/compat/app";
 
 const LoginModal = (props) => {
+  const [error, setError] = useState("");
+  const { register, handleSubmit, errors } = useForm();
+
+  const handleReAuth = ({ email, password }) => {
+    let getUser = firebase.auth().currentUser;
+    let credential = firebase.auth.EmailAuthProvider.credential(
+      email,
+      password
+    );
+    if (getUser) {
+      getUser
+        .reauthenticateWithCredential(credential)
+        .then((user) => {
+          console.log("reauth correct, move forward");
+          props.submitForm(props.modalState.formData);
+        })
+        .catch((error) => {
+          console.log(error);
+          setError("sorry, try again");
+        });
+    }
+  };
   return (
     <Modal show={props.modalState.open} onHide={props.handleClose}>
       <Modal.Header closeButton>
@@ -10,21 +33,34 @@ const LoginModal = (props) => {
       </Modal.Header>
       <Modal.Body>
         <p>Sorry, we need to make sure you are you</p>
-        <form onSubmit="">
+        <form onSubmit={handleSubmit(handleReAuth)}>
           <input
             type="email"
             className="form-control mb-3"
             name="email"
             placeholder="Email"
+            ref={register({
+              required: true,
+              pattern:
+                /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, // eslint-disable-line
+            })}
           />
-          <span className="error">Please check your email</span>
+          {errors.email && (
+            <span className="error">Please check your email</span>
+          )}
           <input
             type="password"
             name="password"
             placeholder="Password"
             className="form-control mb-3"
+            ref={register({
+              required: true,
+            })}
           />
-          <span className="error">error</span>
+          {errors.password && (
+            <span className="error">check your password</span>
+          )}
+          <span className="error">{error}</span>
           <button className="btn btn-primary btn-lg btn-block" type="submit">
             Reauth
           </button>
