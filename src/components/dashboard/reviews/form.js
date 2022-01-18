@@ -43,7 +43,9 @@ class ReviewForm extends Component {
                     value={values.title}
                     onChange={handleChange}
                   />
-                  <div className="error"></div>
+                  {errors.title && touched.title ? (
+                    <div className="error">{errors.title}</div>
+                  ) : null}
                 </Form.Group>
                 <Form.Group>
                   <Form.Label>Excerpt</Form.Label>
@@ -54,7 +56,9 @@ class ReviewForm extends Component {
                     value={values.excerpt}
                     onChange={handleChange}
                   />
-                  <div className="error"></div>
+                  {errors.excerpt && touched.excerpt ? (
+                    <div className="error">{errors.excerpt}</div>
+                  ) : null}
                 </Form.Group>
                 <Form.Group>editor</Form.Group>
                 <div className="error"></div>
@@ -76,7 +80,9 @@ class ReviewForm extends Component {
                     <option value="4">4 Stars</option>
                     <option value="5">5 Stars</option>
                   </Form.Control>
-                  <div className="error"></div>
+                  {errors.rating && touched.rating ? (
+                    <div className="error">{errors.rating}</div>
+                  ) : null}
                 </Form.Group>
                 <Form.Group>
                   <Form.Label>Public</Form.Label>
@@ -92,7 +98,9 @@ class ReviewForm extends Component {
                     <option value="1">Public</option>
                     <option value="0">Draft</option>
                   </Form.Control>
-                  <div className="error"></div>
+                  {errors.public && touched.public ? (
+                    <div className="error">{errors.public}</div>
+                  ) : null}
                 </Form.Group>
                 <Button variant="primary" type="submit" disabled="">
                   Submit
