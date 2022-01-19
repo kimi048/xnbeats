@@ -5,8 +5,13 @@ import { Form, Button, Col } from "react-bootstrap";
 import { Formik } from "formik";
 import * as Yup from "yup";
 
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+
 class ReviewForm extends Component {
   state = {
+    editor: "",
+    editorError: false,
     initialValues: {
       title: "",
       excerpt: "",
@@ -28,6 +33,12 @@ class ReviewForm extends Component {
           public: Yup.number().required("is it public or a draft?"),
         })}
         onSubmit={(values, { resetForm }) => {
+          if (Object.entries(state.editor).length === 0) {
+            return this.setState({ editorError: true });
+          } else {
+            this.setState({ editorError: false });
+            console.log("submit");
+          }
           console.log(values);
         }}
       >
@@ -60,8 +71,18 @@ class ReviewForm extends Component {
                     <div className="error">{errors.excerpt}</div>
                   ) : null}
                 </Form.Group>
-                <Form.Group>editor</Form.Group>
-                <div className="error"></div>
+                <Form.Group>
+                  <CKEditor
+                    editor={ClassicEditor}
+                    data={state.editor}
+                    onChange={(event, editor) => {
+                      this.setState({ editor: editor.getData() });
+                    }}
+                  />
+                </Form.Group>
+                {state.editorError ? (
+                  <div className="error">Sorry, we need something here</div>
+                ) : null}
 
                 <Form.Group>
                   <Form.Label>Rating</Form.Label>
