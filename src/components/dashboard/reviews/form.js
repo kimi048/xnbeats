@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
+import Uploader from "./uploader";
 
 import { Form, Button, Col } from "react-bootstrap";
 import { Formik } from "formik";
@@ -15,6 +16,9 @@ class ReviewForm extends Component {
   state = {
     editor: "",
     editorError: false,
+    img: "https://via.placeholder.com/400",
+    imageName: "",
+    imgError: "",
     disable: false,
     initialValues: {
       title: "",
@@ -152,8 +156,8 @@ class ReviewForm extends Component {
                 </Button>
               </Col>
               <Col>
-                UPLOADER
-                <div className="error">Add an image please</div>
+                <Uploader img={this.state.img} />
+                {/* <div className="error">Add an image please</div> */}
               </Col>
             </Form.Row>
           </Form>
