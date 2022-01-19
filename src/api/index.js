@@ -1,6 +1,8 @@
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
-import { usersCollection } from "../utils/firebase";
+import { usersCollection, reviewsCollection } from "../utils/firebase";
+
+const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
 
 export const registerUser = async ({ email, password, name, lastname }) => {
   try {
@@ -77,3 +79,19 @@ export const updateProfile = (formData, isEmailChanged) => {
     return updateDocment();
   }
 };
+
+export const addReview = (data, user) =>
+  reviewsCollection
+    .add({
+      ...data,
+      createdAt: serverTimestamp(),
+      rating: parseInt(data.rating),
+      public: parseInt(data.public),
+      ownerData: {
+        ownerId: user.uid,
+        name: `${user.name} ${user.lastname}`,
+      },
+    })
+    .then((docRef) => {
+      return docRef.id;
+    });

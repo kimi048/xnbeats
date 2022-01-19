@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { toast } from "react-toastify";
 
 import { Form, Button, Col } from "react-bootstrap";
 import { Formik } from "formik";
@@ -8,16 +9,34 @@ import * as Yup from "yup";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
+import { addReview } from "../../store/actions";
+
 class ReviewForm extends Component {
   state = {
     editor: "",
     editorError: false,
+    disable: false,
     initialValues: {
       title: "",
       excerpt: "",
       rating: "",
       public: "",
     },
+  };
+
+  handleResetForm = (resetForm) => {
+    resetForm({});
+    this.setState({ editor: "", disable: false });
+    toast.success("congrats your post has been uploaded", {
+      position: toast.POSITION.TOP_LEFT,
+    });
+  };
+
+  handleSubmit = (values, resetForm) => {
+    let formData = { ...values, content: this.state.editor };
+    this.props.dispatch(addReview(formData, this.props.auth.user)).then(() => {
+      this.handleResetForm(resetForm);
+    });
   };
 
   render() {
@@ -36,10 +55,11 @@ class ReviewForm extends Component {
           if (Object.entries(state.editor).length === 0) {
             return this.setState({ editorError: true });
           } else {
-            this.setState({ editorError: false });
+            this.setState({ disable: true, editorError: false });
             console.log("submit");
+            this.handleSubmit(values, resetForm);
           }
-          console.log(values);
+          // console.log(values);
         }}
       >
         {({ values, errors, touched, handleChange, handleSubmit }) => (
@@ -123,7 +143,11 @@ class ReviewForm extends Component {
                     <div className="error">{errors.public}</div>
                   ) : null}
                 </Form.Group>
-                <Button variant="primary" type="submit" disabled="">
+                <Button
+                  variant="primary"
+                  type="submit"
+                  disabled={state.disable}
+                >
                   Submit
                 </Button>
               </Col>
