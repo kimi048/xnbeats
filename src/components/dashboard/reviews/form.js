@@ -10,7 +10,7 @@ import * as Yup from "yup";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
-import { addReview } from "../../store/actions";
+import { addReview, clearReview } from "../../store/actions";
 
 class ReviewForm extends Component {
   state = {
@@ -27,6 +27,10 @@ class ReviewForm extends Component {
       public: "",
     },
   };
+
+  componentWillUnmount() {
+    this.props.dispatch(clearReview());
+  }
 
   handleResetForm = (resetForm) => {
     resetForm({});
