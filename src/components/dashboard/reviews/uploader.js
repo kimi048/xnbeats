@@ -27,6 +27,10 @@ const Uploader = (props) => {
         },
         () => {
           setProgress(0);
+          uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+            console.log("FILE AVAILABLE AT", downloadURL);
+            props.handleImageName(uploadTask.snapshot.ref.name, downloadURL);
+          });
         }
       );
     }

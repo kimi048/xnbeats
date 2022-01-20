@@ -17,7 +17,7 @@ class ReviewForm extends Component {
     editor: "",
     editorError: false,
     img: "https://via.placeholder.com/400",
-    imageName: "",
+    imgName: "",
     imgError: "",
     disable: false,
     initialValues: {
@@ -30,14 +30,27 @@ class ReviewForm extends Component {
 
   handleResetForm = (resetForm) => {
     resetForm({});
-    this.setState({ editor: "", disable: false });
+    this.setState({
+      editor: "",
+      img: "https://via.placeholder.com/400",
+      imgError: false,
+      disable: false,
+    });
     toast.success("congrats your post has been uploaded", {
       position: toast.POSITION.TOP_LEFT,
     });
   };
 
+  handleImageName = (name, download) => {
+    this.setState({ img: download, imgName: name });
+  };
+
   handleSubmit = (values, resetForm) => {
-    let formData = { ...values, content: this.state.editor };
+    let formData = {
+      ...values,
+      content: this.state.editor,
+      img: this.state.imgName,
+    };
     this.props.dispatch(addReview(formData, this.props.auth.user)).then(() => {
       this.handleResetForm(resetForm);
     });
@@ -58,8 +71,14 @@ class ReviewForm extends Component {
         onSubmit={(values, { resetForm }) => {
           if (Object.entries(state.editor).length === 0) {
             return this.setState({ editorError: true });
+          } else if (state.imgName === "") {
+            return this.setState({ imgError: true, editorError: false });
           } else {
-            this.setState({ disable: true, editorError: false });
+            this.setState({
+              disable: true,
+              editorError: false,
+              imgError: false,
+            });
             console.log("submit");
             this.handleSubmit(values, resetForm);
           }
@@ -156,8 +175,13 @@ class ReviewForm extends Component {
                 </Button>
               </Col>
               <Col>
-                <Uploader img={this.state.img} />
-                {/* <div className="error">Add an image please</div> */}
+                <Uploader
+                  img={this.state.img}
+                  handleImageName={this.handleImageName}
+                />
+                {state.imgError ? (
+                  <div className="error">Add an image please</div>
+                ) : null}
               </Col>
             </Form.Row>
           </Form>
