@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import moment from "moment";
+import { Link } from "react-router-dom";
+import CarouselWidget from "../../utils/carousel";
 
 import { fetchPosts } from "../store/actions";
 
@@ -11,8 +14,38 @@ class Home extends Component {
     this.props.dispatch(fetchPosts(6, null));
   }
 
+  renderFeaturesPosts = () =>
+    this.props.reviews.posts
+      ? this.props.reviews.posts.map((item, i) => (
+          <Card key={i}>
+            <Card.Header>
+              Created at
+              {moment.unix(item.createdAt.seconds).format("MM/DD/YYYY")}
+            </Card.Header>
+            <Card.Body>
+              <Card.Title>{item.title}</Card.Title>
+              <Card.Text>{item.excerpt}</Card.Text>
+              <Link to={`/reviews/${item.id}`}>Read more</Link>
+            </Card.Body>
+          </Card>
+        ))
+      : null;
+
   render() {
-    return <div>Home</div>;
+    return (
+      <>
+        <CarouselWidget />
+        <Container>
+          <Masonry
+            breakpointCols={3}
+            className="my-masonry-grid"
+            columnClassName="my-masonry-grid_column"
+          >
+            {this.renderFeaturesPosts()}
+          </Masonry>
+        </Container>
+      </>
+    );
   }
 }
 const mapStateToProps = (state) => ({
