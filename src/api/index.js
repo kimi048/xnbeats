@@ -95,3 +95,24 @@ export const addReview = (data, user) =>
     .then((docRef) => {
       return docRef.id;
     });
+
+export const fetchPosts = (limit = 3, where = null) => {
+  return new Promise((resolve, reject) => {
+    let query = reviewsCollection.where("public", "==", 1);
+    if (where) {
+      query = query.where(where[0], where[1], where[2]);
+    } else {
+      query = query.orderBy("createdAt");
+    }
+    query
+      .limit(limit)
+      .get()
+      .then((snapshot) => {
+        const post = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        resolve(post);
+      });
+  });
+};

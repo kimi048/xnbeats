@@ -1,4 +1,10 @@
-import { AUTH_USER, LOGOUT_USER, ADD_REVIEW, CLEAR_REVIEW } from "../types";
+import {
+  AUTH_USER,
+  LOGOUT_USER,
+  ADD_REVIEW,
+  CLEAR_REVIEW,
+  FETCH_POSTS,
+} from "../types";
 import * as api from "../../../api";
 
 // ===== auth =====
@@ -28,6 +34,11 @@ export const updateProfile = (formData, isEmailChanged) => ({
 });
 
 // ===== reviews =====
+export const fetchPosts = (id, cond) => ({
+  type: FETCH_POSTS,
+  payload: api.fetchPosts(id, cond),
+});
+
 export const addReview = (data, user) => ({
   type: ADD_REVIEW,
   payload: api.addReview(data, user),
