@@ -4,7 +4,7 @@ import { Carousel, CarouselItem } from "react-bootstrap";
 const CarouselWidget = () => {
   return (
     <Carousel>
-      <Carousel.Item>
+      <CarouselItem>
         <img
           className="d-block w-100"
           src="/images/SLIDE-1.jpg"
@@ -17,8 +17,8 @@ const CarouselWidget = () => {
             felis hendrerit, elementum turpis at, aliquam libero.
           </p>
         </Carousel.Caption>
-      </Carousel.Item>
-      <Carousel.Item>
+      </CarouselItem>
+      <CarouselItem>
         <img
           className="d-block w-100"
           src="/images/SLIDE-2.jpg"
@@ -31,7 +31,7 @@ const CarouselWidget = () => {
             felis hendrerit, elementum turpis at, aliquam libero.
           </p>
         </Carousel.Caption>
-      </Carousel.Item>
+      </CarouselItem>
     </Carousel>
   );
 };
