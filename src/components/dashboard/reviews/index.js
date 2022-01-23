@@ -2,14 +2,16 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import DashLayout from "../../../utils/dash_layout";
 import { Link } from "react-router-dom";
-import { getReviews } from "../../store/actions";
+import { getReviews, loadMoreReviews } from "../../store/actions";
 
 const ReviewsMain = (props) => {
   const reviews = useSelector((state) => state.reviews);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getReviews(2));
+    if (!reviews.adminReviews) {
+      dispatch(getReviews(2));
+    }
   }, [dispatch]);
 
   const loadMore = () => {

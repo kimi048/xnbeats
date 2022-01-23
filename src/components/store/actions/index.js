@@ -54,3 +54,8 @@ export const getReviews = (limit) => ({
   type: GET_REVIEWS,
   payload: api.getReviews(limit),
 });
+
+export const loadMoreReviews = (limit, reviews) => ({
+  type: GET_REVIEWS,
+  payload: api.loadMoreReviews(limit, reviews),
+});
