@@ -10,10 +10,16 @@ import * as Yup from "yup";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
-import { addReview, clearReview } from "../../store/actions";
+import {
+  addReview,
+  clearReview,
+  getReviewById,
+  editReview,
+} from "../../store/actions";
 
 class ReviewForm extends Component {
   state = {
+    mode: "add",
     editor: "",
     editorError: false,
     img: "https://via.placeholder.com/400",
@@ -27,6 +33,35 @@ class ReviewForm extends Component {
       public: "",
     },
   };
+
+  componentDidMount() {
+    const id = this.props.id;
+    if (id) {
+      this.props
+        .dispatch(getReviewById(id))
+        .then(() => {
+          const reviewById = this.props.reviews.reviewById;
+          this.setState({
+            mode: "edit",
+            editor: reviewById.content,
+            img: reviewById.downloadUrl,
+            imgName: reviewById.img,
+            initialValues: {
+              title: reviewById.title,
+              excerpt: reviewById.excerpt,
+              rating: reviewById.rating,
+              public: reviewById.public,
+            },
+          });
+        })
+        .catch((e) => {
+          this.props.history.push("/dashboard/reviews");
+          toast.error("Sorry, the post does not exist", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          });
+        });
+    }
+  }
 
   componentWillUnmount() {
     this.props.dispatch(clearReview());
@@ -55,9 +90,20 @@ class ReviewForm extends Component {
       content: this.state.editor,
       img: this.state.imgName,
     };
-    this.props.dispatch(addReview(formData, this.props.auth.user)).then(() => {
-      this.handleResetForm(resetForm);
-    });
+    if (this.state.mode === "add") {
+      this.props
+        .dispatch(addReview(formData, this.props.auth.user))
+        .then(() => {
+          this.handleResetForm(resetForm);
+        });
+    } else {
+      this.props.dispatch(editReview(formData, this.props.id)).then(() => {
+        this.setState({ disable: false });
+        toast.success("congrats your post has been updated", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
+      });
+    }
   };
 
   render() {

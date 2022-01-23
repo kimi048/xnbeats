@@ -5,6 +5,7 @@ import {
   CLEAR_REVIEW,
   FETCH_POSTS,
   GET_REVIEWS,
+  GET_REVIEW_BY_ID,
 } from "../types";
 import * as api from "../../../api";
 
@@ -58,4 +59,14 @@ export const getReviews = (limit) => ({
 export const loadMoreReviews = (limit, reviews) => ({
   type: GET_REVIEWS,
   payload: api.loadMoreReviews(limit, reviews),
+});
+
+export const getReviewById = (id) => ({
+  type: GET_REVIEW_BY_ID,
+  payload: api.getReviewById(id),
+});
+
+export const editReview = (data, id) => ({
+  type: GET_REVIEW_BY_ID,
+  payload: api.editReview(data, id),
 });

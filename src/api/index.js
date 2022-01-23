@@ -1,6 +1,7 @@
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import { usersCollection, reviewsCollection } from "../utils/firebase";
+import "firebase/compat/storage";
 
 const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
 
@@ -130,6 +131,28 @@ export const loadMoreReviews = (limit, reviews) => {
   } else {
     console.log("no more posts");
     return { posts, lastVisible };
+  }
+};
+
+export const editReview = (data, id) =>
+  reviewsCollection
+    .doc(id)
+    .update(data)
+    .then(() => {
+      return getReviewById(id);
+    });
+
+export const getReviewById = async (id) => {
+  try {
+    const snapshot = await reviewsCollection.doc(id).get();
+    const data = snapshot.data();
+    const url = await firebase
+      .storage()
+      .ref(`reviews/${data.img}`)
+      .getDownloadURL();
+    return { ...data, downloadUrl: url };
+  } catch (error) {
+    return null;
   }
 };
 
