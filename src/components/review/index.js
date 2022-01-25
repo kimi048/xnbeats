@@ -1,11 +1,19 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getReviewById } from "../store/actions";
+import { getReviewById, clearReview } from "../store/actions";
 import { Container, Row, Col, Card } from "react-bootstrap";
+import ReactStars from "react-star-rating-component";
+import { useLocation } from "react-router-dom";
+import SpinnerComp from "../../utils/spinner";
 
 const Review = (props) => {
+  const { pathname } = useLocation();
   const reviews = useSelector((state) => state.reviews);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   useEffect(() => {
     dispatch(getReviewById(props.match.params.id)).then((response) => {
@@ -15,6 +23,12 @@ const Review = (props) => {
     });
   }, [props, dispatch]);
 
+  useEffect(() => {
+    return () => {
+      dispatch(clearReview());
+      console.log("*** unmounted");
+    };
+  }, [dispatch]);
   return (
     <Container className="page">
       {reviews.reviewById ? (
@@ -38,12 +52,19 @@ const Review = (props) => {
                 </div>
                 <Card.Body>
                   <Card.Title>Our rating</Card.Title>
+                  <ReactStars
+                    name="stars"
+                    count={5}
+                    value={reviews.reviewById.rating}
+                    size={24}
+                    edit={false}
+                  />
                 </Card.Body>
               </Card>
             </Col>
           </Row>
         </div>
-      ) : null}
+      ) : <SpinnerComp/>}
     </Container>
   );
 };
