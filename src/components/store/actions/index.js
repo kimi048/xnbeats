@@ -6,8 +6,14 @@ import {
   FETCH_POSTS,
   GET_REVIEWS,
   GET_REVIEW_BY_ID,
+  SEND_CONTACT,
 } from "../types";
 import * as api from "../../../api";
+// ===== contact ====
+export const sendContact = (data) => ({
+  type: SEND_CONTACT,
+  payload: api.sendContact(data),
+});
 
 // ===== auth =====
 export const registerUser = (userData) => ({

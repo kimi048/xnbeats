@@ -5,3 +5,4 @@ export const CLEAR_REVIEW = "clear_review";
 export const FETCH_POSTS = "fetch_posts";
 export const GET_REVIEWS = "get_reviews";
 export const GET_REVIEW_BY_ID = "get_review_by_id";
+export const SEND_CONTACT = "send_contact";
