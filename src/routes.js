@@ -13,6 +13,7 @@ import Reviews from "./components/dashboard/reviews";
 import Profile from "./components/dashboard/profile";
 import ReviewAddEdit from "./components/dashboard/reviews/add_edit";
 import Review from "./components/review";
+import Messages from "./components/dashboard/messages";
 
 import ToastsComponent from "./utils/toasts";
 import { connect } from "react-redux";
@@ -40,6 +41,7 @@ class Routes extends Component {
           />
           <Route path="/dashboard/reviews" component={AuthHoc(Reviews, true)} />
           <Route path="/dashboard/profile" component={AuthHoc(Profile)} />
+          <Route path="/dashboard/messages" component={AuthHoc(Messages,true)} />
           <Route path="/dashboard" component={AuthHoc(Dashboard)} />
           <Route path="/reviews/:id" component={Review} />
           <Route path="/login" component={Login} />
